@@ -1,15 +1,26 @@
 // src/pages/LoginPage.tsx
 import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle login logic here
     console.log(username, password);
+
+    if (username === "admin@admin.com") {
+      localStorage.setItem("user", "isAdmin");
+      navigate("/ai/upload");
+    } else {
+      localStorage.setItem("user", "isUser");
+      navigate("/ai/chat");
+    }
   };
 
   return (
