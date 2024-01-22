@@ -17,7 +17,11 @@ const Main: React.FC = () => {
     <div className="bg-gray-100 h-full flex">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <div className={` ${isSidebarOpen ? "ml-64" : "ml-16"} w-full`}>
+      <div
+        className={` ${
+          isSidebarOpen ? "ml-64" : "ml-16"
+        } w-full transition-all duration-300 ease-in-out`}
+      >
         <Outlet />
       </div>
     </div>
