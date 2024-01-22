@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import Sidebar from "../../layouts/Main/components/Sidebar";
 import { Button } from "../../components/ui/button";
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const messagesEndRef = useRef<null | HTMLDivElement>(null); // Reference to the dummy div at the end of the messages
 
   const sendMessage = (e: React.FormEvent) => {
@@ -24,16 +22,10 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   return (
-    <div className="flex h-screen">
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+    <div className="flex h-screen ">
       <div
-        className={`flex-1 flex flex-col bg-gray-100 transition-all duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-16"
+        className={`flex-1 flex flex-col bg-gray-100 transition-all duration-300 w-full
         }`}
       >
         <div className="flex-1 p-4 overflow-auto space-y-4 flex flex-col justify-end">
