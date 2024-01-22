@@ -43,13 +43,13 @@ const LoginPage = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-5 min-h-screen bg-gray-100">
       <div className="absolute top-10 flex justify-center mb-4">
-        {/* Replace src with your logo's path */}
         <img
           src="src/assets/images/logo/openAI.png"
           alt="Logo"
           className="h-12 w-12"
         />
       </div>
+      
       <div className="bg-white p-8 rounded-xl shadow-md max-w-sm w-full">
         <div className="mb-4">
           <h1 className="text-2xl font-semibold  mb-2">QuickGPT</h1>
