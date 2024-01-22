@@ -7,6 +7,7 @@ import {
   AiOutlineBook,
   AiOutlineSetting,
 } from "react-icons/ai"; // Import icons
+import { Button } from "../../../components/ui/button";
 
 const Sidebar = ({
   isOpen,
@@ -26,7 +27,7 @@ const Sidebar = ({
         {isOpen && (
           <div className="flex items-center space-x-2">
             {/* Replace with your logo */}
-            <span className="font-bold text-lg">Sidebar</span>
+            <span className="font-bold text-xl">QuickGPT</span>
           </div>
         )}
         <button
@@ -77,32 +78,48 @@ const Sidebar = ({
         </div>
       </div>
 
-      {/* User Profile Section */}
-      <div
-        className={`absolute bottom-4 w-full flex ${
-          isOpen ? "justify-between" : "justify-center"
-        } items-center p-4`}
-      >
-        <div className="flex items-center space-x-2">
-          <img
-            src="https://github.com/shadcn.png"
-            alt="User Avatar"
-            className={`rounded-full w-10 ${isOpen ? "h-10" : "h-8"}`}
-          />
-          <p
-            className={`text-gray-800 text-sm font-medium ${
-              isOpen ? "block" : "hidden"
-            }`}
-          >
-            srdarkseer
+      <div className="absolute bottom-4 flex flex-col gap-10">
+        <div
+          className={`px-4 py-2 bg-gray-100 mx-4 flex flex-col gap-3 rounded-lg text-center ${
+            isOpen ? "block" : "hidden"
+          }`}
+        >
+          <span className="text-gray-800 text-sm font-medium">
+            Upgrade Plan
+          </span>
+          <p className="text-gray-600 text-xs">
+            Upgrade for image upload, smarter AI, and more Copilot.
           </p>
+          <Button>Subscribe</Button>
         </div>
 
-        {isOpen && (
-          <button className="text-xl rounded-full p-2 hover:bg-gray-200 focus:outline-none">
-            <AiOutlineSetting />
-          </button>
-        )}
+        {/* User Profile Section */}
+        <div
+          className={` w-full flex ${
+            isOpen ? "justify-between" : "justify-center"
+          } items-center p-4`}
+        >
+          <div className="flex items-center space-x-2">
+            <img
+              src="https://github.com/shadcn.png"
+              alt="User Avatar"
+              className={`rounded-full w-10 ${isOpen ? "h-10" : "h-8"}`}
+            />
+            <p
+              className={`text-gray-800 text-sm font-medium ${
+                isOpen ? "block" : "hidden"
+              }`}
+            >
+              srdarkseer
+            </p>
+          </div>
+
+          {isOpen && (
+            <button className="text-xl rounded-full p-2 hover:bg-gray-200 focus:outline-none">
+              <AiOutlineSetting />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
