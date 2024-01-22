@@ -7,7 +7,6 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState([
     { id: 1, text: "Hi", sender: "user" },
     { id: 2, text: "Hello! How can I assist you today?", sender: "ai" },
-    // ...additional messages
   ]);
   const [input, setInput] = useState("");
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -23,6 +22,15 @@ const ChatInterface = () => {
       setMessages([...messages, newMessage]);
       setInput("");
     }
+  };
+
+  const handleInput = (e) => {
+    e.currentTarget.style.height = "inherit";
+    e.currentTarget.style.height = `${Math.min(
+      e.currentTarget.scrollHeight,
+      94
+    )}px`;
+    e.currentTarget.scrollTop = e.currentTarget.scrollHeight;
   };
 
   // Scroll to the latest message whenever the messages change
@@ -64,12 +72,13 @@ const ChatInterface = () => {
       </div>
       <div className="py-4 px-40 border-t border-gray-200">
         <form onSubmit={sendMessage} className="flex items-center gap-2">
-          <input
-            type="text"
+          <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg"
+            onInput={handleInput}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg resize-none overflow-auto max-h-24"
             placeholder="Send a message"
+            rows={1}
           />
           <Button type="submit">
             <AiOutlineSend />
