@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../layouts/Main/components/Sidebar";
 import FileUpload from "../../components/FileUpload";
 
 const Upload = () => {

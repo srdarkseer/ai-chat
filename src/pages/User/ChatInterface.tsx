@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../layouts/Main/components/Sidebar";
 import { Button } from "../../components/ui/button";
 
 const ChatInterface = () => {
