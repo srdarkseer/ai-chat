@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +5,38 @@ import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
+    // Clear previous error messages
+    setUsernameError("");
+    setPasswordError("");
+
+    let isValid = true;
+
+    // Check if username is filled
+    if (!username.trim()) {
+      setUsernameError("Please enter your username.");
+      isValid = false;
+    }
+
+    // Check if password is filled
+    if (!password.trim()) {
+      setPasswordError("Please enter your password.");
+      isValid = false;
+    }
+
+    if (!isValid) {
+      return;
+    }
+
     console.log(username, password);
 
+    // Sample login logic
     if (username === "admin@admin.com") {
       localStorage.setItem("user", "isAdmin");
       navigate("/ai/upload");
@@ -51,17 +74,26 @@ const LoginPage = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   value={username}
                 />
+                {usernameError && (
+                  <p className="text-red-500 text-xs mt-1">{usernameError}</p>
+                )}
               </div>
 
               <div>
-                <label className="block">Password</label>
+                <label className="block" htmlFor="password">
+                  Password
+                </label>
                 <input
                   type="password"
                   placeholder="Password"
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1"
+                  id="password"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
                 />
+                {passwordError && (
+                  <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+                )}
               </div>
 
               <div className="flex items-baseline justify-between">
