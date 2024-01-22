@@ -41,7 +41,7 @@ const Sidebar = ({
       {/* Sidebar Menu Items */}
       <div className={`flex-1 ${isOpen ? "flex-col" : "justify-center"}`}>
         <Link
-          to="#"
+          to="/ai/chat"
           className={`py-4  flex ${
             isOpen ? "justify-start pl-4" : "justify-center"
           } items-center w-full focus:outline-none hover:bg-gray-200 transition duration-300`}
@@ -55,7 +55,7 @@ const Sidebar = ({
         </Link>
 
         <Link
-          to="#"
+          to="/ai/upload"
           className={`py-4 flex ${
             isOpen ? "justify-start pl-4 " : "justify-center"
           } items-center w-full focus:outline-none hover:bg-gray-200 transition duration-300`}
