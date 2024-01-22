@@ -2,14 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../../components/ui/button";
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  // Updated state to include sender information
+  const [messages, setMessages] = useState([
+    { text: "How can I help you?", sender: "ai" },
+    { text: "Can you summarize how AI works?", sender: "user" },
+  ]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<null | HTMLDivElement>(null); // Reference to the dummy div at the end of the messages
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      setMessages((prevMessages) => [...prevMessages, input]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: input, sender: "user" },
+      ]);
       setInput("");
     }
   };
@@ -29,17 +36,35 @@ const ChatInterface = () => {
         }`}
       >
         <div className="flex-1 p-4 overflow-auto space-y-4 flex flex-col justify-end">
-          {/* Display messages */}
+          {/* Display messages with conditional rendering based on the sender */}
           {messages.map((message, index) => (
-            <div key={index} className="flex justify-end items-end">
-              <div className="bg-white p-2 rounded-md shadow max-w-xs">
-                {message}
+            <div
+              key={index}
+              className={`flex ${
+                message.sender === "ai" ? "justify-start" : "justify-end"
+              } items-end`}
+            >
+              {message.sender === "ai" && (
+                <img
+                  src="https://chatai.com/wp-content/uploads/2023/11/tr71123-ai-art.jpeg"
+                  alt="AI Avatar"
+                  className="w-10 h-10 object-cover rounded-full mr-2"
+                />
+              )}
+              <div
+                className={`p-2 rounded-md shadow max-w-xs ${
+                  message.sender === "ai" ? "bg-blue-100" : "bg-white"
+                }`}
+              >
+                {message.text}
               </div>
-              <img
-                src="https://github.com/shadcn.png"
-                alt="Avatar"
-                className="w-10 h-10 rounded-full ml-2"
-              />
+              {message.sender === "user" && (
+                <img
+                  src="https://github.com/shadcn.png"
+                  alt="User Avatar"
+                  className="w-10 h-10 rounded-full ml-2"
+                />
+              )}
             </div>
           ))}
           <div ref={messagesEndRef} /> {/* Dummy div for scrolling to bottom */}
