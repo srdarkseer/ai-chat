@@ -1,86 +1,83 @@
 import React, { useState, useEffect, useRef } from "react";
+import { AiOutlineSend } from "react-icons/ai";
 import { Button } from "../../components/ui/button";
+import openAIImage from "../../assets/images/logo/openAI.png";
 
 const ChatInterface = () => {
-  // Updated state to include sender information
   const [messages, setMessages] = useState([
-    { text: "How can I help you?", sender: "ai" },
-    { text: "Can you summarize how AI works?", sender: "user" },
+    { id: 1, text: "Hi", sender: "user" },
+    { id: 2, text: "Hello! How can I assist you today?", sender: "ai" },
+    // ...additional messages
   ]);
   const [input, setInput] = useState("");
-  const messagesEndRef = useRef<null | HTMLDivElement>(null); // Reference to the dummy div at the end of the messages
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: input, sender: "user" },
-      ]);
+      const newMessage = {
+        id: messages.length + 1,
+        text: input,
+        sender: "user",
+      };
+      setMessages([...messages, newMessage]);
       setInput("");
     }
   };
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Scroll to the latest message whenever the messages change
   useEffect(() => {
-    scrollToBottom();
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   return (
-    <div className="flex h-screen ">
+    <div className="flex flex-col h-screen bg-gray-100">
       <div
-        className={`flex-1 flex flex-col bg-gray-100 transition-all duration-300 w-full
-        }`}
+        ref={messagesContainerRef}
+        className="flex-1 overflow-auto flex flex-col-reverse"
       >
-        <div className="flex-1 p-4 overflow-auto space-y-4 flex flex-col justify-end">
-          {/* Display messages with conditional rendering based on the sender */}
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`flex ${
-                message.sender === "ai" ? "justify-start" : "justify-end"
-              } items-end`}
-            >
-              {message.sender === "ai" && (
-                <img
-                  src="https://chatai.com/wp-content/uploads/2023/11/tr71123-ai-art.jpeg"
-                  alt="AI Avatar"
-                  className="w-10 h-10 object-cover rounded-full mr-2"
-                />
-              )}
-              <div
-                className={`p-2 rounded-md shadow max-w-xs ${
-                  message.sender === "ai" ? "bg-blue-100" : "bg-white"
-                }`}
-              >
-                {message.text}
-              </div>
-              {message.sender === "user" && (
-                <img
-                  src="https://github.com/shadcn.png"
-                  alt="User Avatar"
-                  className="w-10 h-10 rounded-full ml-2"
-                />
-              )}
-            </div>
-          ))}
-          <div ref={messagesEndRef} /> {/* Dummy div for scrolling to bottom */}
-        </div>
-        <div className="border-t-2 border-gray-200 p-4 mt-auto">
-          <form onSubmit={sendMessage} className="flex gap-5">
-            <input
-              type="text"
-              className="w-full p-2 border-2 border-gray-300 rounded-md"
-              placeholder="Type your message here..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
+        {/* We reverse the messages array for display but maintain the original order for state management */}
+        {[...messages].reverse().map((message) => (
+          <div
+            key={message.id}
+            className={`flex items-end space-x-2 py-4 px-40 ${
+              message.sender === "ai" ? "bg-gray-200" : "bg-gray-100"
+            }`}
+          >
+            <img
+              src={
+                message.sender === "ai"
+                  ? openAIImage
+                  : "https://github.com/shadcn.png"
+              }
+              alt={`${message.sender} Avatar`}
+              className="w-10 h-10 object-cover rounded-full"
             />
-            <Button variant="default">Send</Button>
-          </form>
-        </div>
+            <div className="flex flex-col flex-1">
+              <div className="p-2 rounded text-black">{message.text}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="py-4 px-40 border-t border-gray-200">
+        <form onSubmit={sendMessage} className="flex items-center gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg"
+            placeholder="Send a message"
+          />
+          <Button type="submit">
+            <AiOutlineSend />
+          </Button>
+        </form>
+        <p className="text-xs text-center text-slate-500 mt-4">
+          QuickGPT can make mistakes. Consider checking important information.
+        </p>
       </div>
     </div>
   );
