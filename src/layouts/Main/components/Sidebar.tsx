@@ -1,12 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   AiOutlineMenu,
   AiOutlineClose,
-  AiOutlineHome,
   AiOutlineSearch,
   AiOutlineBook,
   AiOutlineSetting,
-} from "react-icons/ai"; // Import icons
+} from "react-icons/ai";
 import { Button } from "../../../components/ui/button";
 
 const Sidebar = ({
@@ -39,22 +39,12 @@ const Sidebar = ({
       </div>
 
       {/* Sidebar Menu Items */}
-      <div className={`flex-1 ${isOpen ? "pl-4 flex-col" : "justify-center"}`}>
-        <div
-          className={`py-4 flex ${
-            isOpen ? "justify-start" : "justify-center"
-          } items-center w-full`}
-        >
-          <AiOutlineHome className="text-gray-600" />
-          {isOpen && (
-            <span className="text-gray-800 text-sm font-medium pl-2">Home</span>
-          )}
-        </div>
-
-        <div
-          className={`py-4 flex ${
-            isOpen ? "justify-start" : "justify-center"
-          } items-center w-full`}
+      <div className={`flex-1 ${isOpen ? "flex-col" : "justify-center"}`}>
+        <Link
+          to="#"
+          className={`py-4  flex ${
+            isOpen ? "justify-start pl-4" : "justify-center"
+          } items-center w-full focus:outline-none hover:bg-gray-200 transition duration-300`}
         >
           <AiOutlineSearch className="text-gray-600" />
           {isOpen && (
@@ -62,12 +52,13 @@ const Sidebar = ({
               Discover
             </span>
           )}
-        </div>
+        </Link>
 
-        <div
+        <Link
+          to="#"
           className={`py-4 flex ${
-            isOpen ? "justify-start" : "justify-center"
-          } items-center w-full`}
+            isOpen ? "justify-start pl-4 " : "justify-center"
+          } items-center w-full focus:outline-none hover:bg-gray-200 transition duration-300`}
         >
           <AiOutlineBook className="text-gray-600" />
           {isOpen && (
@@ -75,7 +66,7 @@ const Sidebar = ({
               Library
             </span>
           )}
-        </div>
+        </Link>
       </div>
 
       <div className="absolute bottom-4 flex flex-col gap-10">
@@ -105,13 +96,11 @@ const Sidebar = ({
               alt="User Avatar"
               className={`rounded-full w-10 ${isOpen ? "h-10" : "h-8"}`}
             />
-            <p
-              className={`text-gray-800 text-sm font-medium ${
-                isOpen ? "block" : "hidden"
-              }`}
-            >
-              srdarkseer
-            </p>
+            {isOpen && (
+              <span className="text-gray-800 text-sm font-medium">
+                srdarkseer
+              </span>
+            )}
           </div>
 
           {isOpen && (
