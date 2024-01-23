@@ -10,30 +10,39 @@ const ChatInterface = () => {
   ]);
   const [input, setInput] = useState("");
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
       const newMessage = {
         id: messages.length + 1,
-        text: input,
+        text: input.replace(/(?:\r\n|\r|\n)/g, "<br>"), // Replace newline characters with <br> tags
         sender: "user",
       };
       setMessages([...messages, newMessage]);
       setInput("");
+      if (textAreaRef.current) {
+        textAreaRef.current.style.height = "38px"; // Reset the height of the textarea
+      }
     }
   };
 
-  const handleInput = (e) => {
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.currentTarget.style.height = "inherit";
     e.currentTarget.style.height = `${Math.min(
       e.currentTarget.scrollHeight,
       94
     )}px`;
-    e.currentTarget.scrollTop = e.currentTarget.scrollHeight;
   };
 
-  // Scroll to the latest message whenever the messages change
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e as unknown as React.FormEvent);
+    }
+  };
+
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -41,13 +50,21 @@ const ChatInterface = () => {
     }
   }, [messages]);
 
+  const formatMessageText = (text: string) => {
+    return text.split("<br>").map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        {index !== text.split("<br>").length - 1 && <br />}
+      </React.Fragment>
+    ));
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       <div
         ref={messagesContainerRef}
         className="flex-1 overflow-auto flex flex-col-reverse"
       >
-        {/* We reverse the messages array for display but maintain the original order for state management */}
         {[...messages].reverse().map((message) => (
           <div
             key={message.id}
@@ -65,7 +82,9 @@ const ChatInterface = () => {
               className="w-10 h-10 object-cover rounded-full"
             />
             <div className="flex flex-col flex-1">
-              <div className="p-2 rounded text-black">{message.text}</div>
+              <div className="p-2 rounded text-black whitespace-pre-wrap">
+                {formatMessageText(message.text)}
+              </div>
             </div>
           </div>
         ))}
@@ -73,12 +92,15 @@ const ChatInterface = () => {
       <div className="py-4 px-40 border-t border-gray-200">
         <form onSubmit={sendMessage} className="flex items-center gap-2">
           <textarea
+            ref={textAreaRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
             onInput={handleInput}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg resize-none overflow-auto max-h-24"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg resize-none overflow-hidden"
             placeholder="Send a message"
             rows={1}
+            style={{ minHeight: "38px" }}
           />
           <Button type="submit">
             <AiOutlineSend />
