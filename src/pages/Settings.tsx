@@ -13,6 +13,10 @@ const Settings = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState("srdarkseer");
   const [editedUsername, setEditedUsername] = useState(username);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const handleEditAvatar = () => {
     console.log("Edit avatar clicked");
@@ -33,10 +37,33 @@ const Settings = () => {
     setIsEditing(false);
   };
 
+  const handleEditPassword = () => {
+    setIsEditingPassword(true);
+  };
+
+  const handleSavePassword = () => {
+    if (newPassword === confirmNewPassword) {
+      console.log("Password changed to:", newPassword);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      setIsEditingPassword(false);
+    } else {
+      console.error("Passwords do not match!");
+    }
+  };
+
+  const handleCancelEditPassword = () => {
+    setIsEditingPassword(false);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen w-full">
       <div className="border-b border-slate-300 py-4 flex justify-center">
-        <div className="max-w-2xl w-full py-0.5 flex justify-center">
+        <div className="max-w-2xl w-full py-0.5">
           <h1 className="font-semibold text-3xl">Settings</h1>
         </div>
       </div>
@@ -74,7 +101,7 @@ const Settings = () => {
                       type="text"
                       value={editedUsername}
                       onChange={(e) => setEditedUsername(e.target.value)}
-                      className="text-gray-900 text-sm border border-gray-300 rounded-md p-1 w-full"
+                      className="text-gray-900 text-sm border border-gray-300 rounded-md p-2 w-full"
                     />
                     <div className="flex justify-end w-full">
                       <Button
@@ -120,9 +147,55 @@ const Settings = () => {
 
               <div className="py-4 flex justify-between items-center">
                 <span className="text-gray-700">Change Password</span>
-                <Button variant="ghost" size="icon">
-                  <FiEdit />
-                </Button>
+                {isEditingPassword ? (
+                  <div className="flex flex-col items-end gap-2">
+                    <input
+                      type="password"
+                      placeholder="Current Password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="text-gray-900 text-sm border border-gray-300 rounded-md p-2"
+                    />
+                    <input
+                      type="password"
+                      placeholder="New Password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="text-gray-900 text-sm border border-gray-300 rounded-md p-2"
+                    />
+                    <input
+                      type="password"
+                      placeholder="Confirm New Password"
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      className="text-gray-900 text-sm border border-gray-300 rounded-md p-2"
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleSavePassword}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCancelEditPassword}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleEditPassword}
+                  >
+                    <FiEdit />
+                  </Button>
+                )}
               </div>
 
               <div className="py-4 flex justify-between items-center">
