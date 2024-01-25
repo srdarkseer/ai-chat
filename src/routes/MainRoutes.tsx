@@ -3,6 +3,7 @@ import LoginPage from "../pages/Auth/Login";
 import ChatInterface from "../pages/User/ChatInterface";
 import Upload from "../pages/Admin/Upload";
 import MainLayout from "../layouts/Main";
+import Setting from "../pages/Settings";
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -24,6 +25,10 @@ const MainRoutes = {
         {
           path: "upload",
           element: <Upload />,
+        },
+        {
+          path: "settings",
+          element: <Setting />,
         },
       ],
     },
