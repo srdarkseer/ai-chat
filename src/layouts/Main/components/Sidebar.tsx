@@ -104,9 +104,11 @@ const Sidebar = ({
           </div>
 
           {isOpen && (
-            <button className="text-xl rounded-full p-2 hover:bg-gray-200 focus:outline-none">
-              <AiOutlineSetting />
-            </button>
+            <Link to="/ai/settings">
+              <Button variant="ghost" size="icon">
+                <AiOutlineSetting className="w-5 h-5" />
+              </Button>
+            </Link>
           )}
         </div>
       </div>
