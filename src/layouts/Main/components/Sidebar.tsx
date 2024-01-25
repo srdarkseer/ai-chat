@@ -30,12 +30,9 @@ const Sidebar = ({
             <span className="font-bold text-xl">QuickGPT</span>
           </div>
         )}
-        <button
-          onClick={toggleSidebar}
-          className="text-xl rounded-full p-2 hover:bg-gray-200 focus:outline-none"
-        >
-          {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
-        </button>
+        <Button onClick={toggleSidebar} variant="ghost" size="icon" className="p-3">
+          {isOpen ? <AiOutlineClose className="w-5 h-5" /> : <AiOutlineMenu className="w-5 h-5" />}
+        </Button>
       </div>
 
       {/* Sidebar Menu Items */}
