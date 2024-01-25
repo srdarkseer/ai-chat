@@ -10,8 +10,27 @@ import { HiOutlinePaintBrush } from "react-icons/hi2";
 import pro from "./../assets/images/pro.png";
 
 const Settings = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [username, setUsername] = useState("srdarkseer");
+  const [editedUsername, setEditedUsername] = useState(username);
+
   const handleEditAvatar = () => {
     console.log("Edit avatar clicked");
+  };
+
+  const handleEditUsername = () => {
+    setIsEditing(true);
+    setEditedUsername(username);
+  };
+
+  const handleSaveUsername = () => {
+    setUsername(editedUsername);
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditedUsername(username);
+    setIsEditing(false);
   };
 
   return (
@@ -49,14 +68,45 @@ const Settings = () => {
 
               <div className="py-4 flex justify-between items-center">
                 <span className="text-gray-700">Username</span>
-                <div className="flex items-center space-x-3">
-                  <span className="text-gray-900 text-sm font-semibold">
-                    srdarkseer
-                  </span>
-                  <Button variant="ghost" size="icon">
-                    <FiEdit />
-                  </Button>
-                </div>
+                {isEditing ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <input
+                      type="text"
+                      value={editedUsername}
+                      onChange={(e) => setEditedUsername(e.target.value)}
+                      className="text-gray-900 text-sm border border-gray-300 rounded-md p-1 w-full"
+                    />
+                    <div className="flex justify-end w-full">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleSaveUsername}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCancelEdit}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-3">
+                    <span className="text-gray-900 text-sm font-semibold">
+                      {username}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={handleEditUsername}
+                    >
+                      <FiEdit />
+                    </Button>
+                  </div>
+                )}
               </div>
 
               <div className="py-4 flex justify-between items-center">
