@@ -1,13 +1,17 @@
-// third party
-import { Navigate, Outlet } from "react-router-dom";
+// PrivateRoute.js
 
-// ==============================|| PRIVATE ROUTING ||============================== //
+import React, { useContext } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext"; // Import your authentication context
 
 const PrivateRoute = () => {
-  // const userId = localStorage.getItem("user_id");
-  const userId = true;
+  const { isAuthenticated } = useContext(AuthContext); // Use the authentication context to check if the user is authenticated
 
-  return userId ? <Outlet /> : <Navigate to="/login" replace />;
+  return isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" replace /> // Redirect to the login page if not authenticated
+  );
 };
 
 export default PrivateRoute;

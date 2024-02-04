@@ -11,6 +11,7 @@ export interface AuthContextProps {
     password: string
   ) => Promise<firebase.auth.UserCredential>;
   logOut: () => Promise<void>;
+  isAuthenticated: boolean;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -69,10 +70,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
+  const isAuthenticated = currentUser !== null;
+
   const value: AuthContextProps = {
     currentUser,
     logIn,
     logOut,
+    isAuthenticated,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,5 +1,4 @@
 import PrivateRoute from "./PrivateRoutes";
-import LoginPage from "../pages/Auth/Login";
 import ChatInterface from "../pages/User/ChatInterface";
 import Upload from "../pages/Admin/Upload";
 import MainLayout from "../layouts/Main";
@@ -15,10 +14,6 @@ const MainRoutes = {
     {
       element: <PrivateRoute />,
       children: [
-        {
-          path: "test",
-          element: <LoginPage />,
-        },
         {
           path: "chat",
           element: <ChatInterface />,
