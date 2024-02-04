@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -8,9 +9,22 @@ const LoginPage = () => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  const { logIn, currentUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token && currentUser) {
+      // Redirect to the appropriate page based on user role
+      if (currentUser.email === "superadmin@admin.com") {
+        navigate("/ai/upload");
+      } else {
+        navigate("/ai/chat");
+      }
+    }
+  }, [currentUser, navigate]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setUsernameError("");
     setPasswordError("");
@@ -29,14 +43,20 @@ const LoginPage = () => {
 
     if (!isValid) return;
 
-    console.log(username, password);
+    try {
+      await logIn(username, password);
+      console.log("User logged in successfully");
 
-    if (username === "admin@admin.com") {
-      localStorage.setItem("user", "isAdmin");
-      navigate("/ai/upload");
-    } else {
-      localStorage.setItem("user", "isUser");
-      navigate("/ai/chat");
+      // Redirect to the appropriate page based on user role
+      if (username === "superadmin@admin.com") {
+        navigate("/ai/upload");
+      } else {
+        navigate("/ai/chat");
+      }
+    } catch (error) {
+      // Handle authentication error
+      console.error("Login failed:", error);
+      setUsernameError("Login failed. Please check your credentials.");
     }
   };
 
@@ -49,7 +69,7 @@ const LoginPage = () => {
           className="h-12 w-12"
         />
       </div>
-      
+
       <div className="bg-white p-8 rounded-xl shadow-md max-w-sm w-full">
         <div className="mb-4">
           <h1 className="text-2xl font-semibold  mb-2">QuickGPT</h1>
