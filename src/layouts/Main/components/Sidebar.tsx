@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Button } from "../../../components/ui/button";
 import {
   AiOutlineMenu,
   AiOutlineClose,
@@ -7,7 +8,7 @@ import {
   AiOutlineBook,
   AiOutlineSetting,
 } from "react-icons/ai";
-import { Button } from "../../../components/ui/button";
+import { PiUsersLight } from "react-icons/pi";
 
 const Sidebar = ({
   isOpen,
@@ -30,8 +31,17 @@ const Sidebar = ({
             <span className="font-bold text-xl">QuickGPT</span>
           </div>
         )}
-        <Button onClick={toggleSidebar} variant="ghost" size="icon" className="p-3">
-          {isOpen ? <AiOutlineClose className="w-5 h-5" /> : <AiOutlineMenu className="w-5 h-5" />}
+        <Button
+          onClick={toggleSidebar}
+          variant="ghost"
+          size="icon"
+          className="p-3"
+        >
+          {isOpen ? (
+            <AiOutlineClose className="w-5 h-5" />
+          ) : (
+            <AiOutlineMenu className="w-5 h-5" />
+          )}
         </Button>
       </div>
 
@@ -61,6 +71,20 @@ const Sidebar = ({
           {isOpen && (
             <span className="text-gray-800 text-sm font-medium pl-2">
               Library
+            </span>
+          )}
+        </Link>
+
+        <Link
+          to="/ai/users"
+          className={`py-4 flex ${
+            isOpen ? "justify-start pl-4 " : "justify-center"
+          } items-center w-full focus:outline-none hover:bg-gray-200 transition duration-300`}
+        >
+          <PiUsersLight className="text-gray-600" />
+          {isOpen && (
+            <span className="text-gray-800 text-sm font-medium pl-2">
+              User Management
             </span>
           )}
         </Link>

@@ -20,7 +20,7 @@ const Main: React.FC = () => {
       <div
         className={` ${
           isSidebarOpen ? "ml-64" : "ml-16"
-        } w-full transition-all duration-300 ease-in-out`}
+        } w-full transition-all duration-300 ease-in-out `}
       >
         <Outlet />
       </div>
