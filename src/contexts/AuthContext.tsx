@@ -1,4 +1,3 @@
-// AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { auth } from "../config/firebase";
 import firebase from "firebase/compat/app";
@@ -12,6 +11,7 @@ export interface AuthContextProps {
   ) => Promise<firebase.auth.UserCredential>;
   logOut: () => Promise<void>;
   isAuthenticated: boolean;
+  isAuthLoading: boolean;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(
@@ -28,6 +28,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true); // Initialize isAuthLoading
 
   // Function to log in
   async function logIn(email: string, password: string) {
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
+      setIsAuthLoading(false);
     });
 
     return unsubscribe;
@@ -77,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logIn,
     logOut,
     isAuthenticated,
+    isAuthLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
