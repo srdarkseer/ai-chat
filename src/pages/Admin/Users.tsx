@@ -26,6 +26,27 @@ const Users = () => {
     setIsDialogOpen(false);
   };
 
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({
+    sno: null,
+    name: "",
+    email: "",
+  });
+
+  const handleEdit = (user) => {
+    setCurrentUser({
+      sno: user.sno,
+      name: user.name,
+      email: user.email,
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = (event) => {
+    event.preventDefault();
+    setIsEditDialogOpen(false);
+  };
+
   const tableData = [
     { sno: 1, name: "John Doe", email: "johndoe@example.com" },
     { sno: 2, name: "Jane Smith", email: "janesmith@example.com" },
@@ -56,7 +77,11 @@ const Users = () => {
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.email}</TableCell>
               <TableCell className="text-center">
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleEdit(row)}
+                >
                   <FiEdit className="w-5 h-5" />
                 </Button>
               </TableCell>
@@ -100,6 +125,61 @@ const Users = () => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="p-2 block w-full border border-gray-300 rounded-md shadow-sm"
+                required
+              />
+            </div>
+            <div className="flex justify-center">
+              <Button
+                variant="default"
+                size="default"
+                className="w-28"
+                type="submit"
+              >
+                Save
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent>
+          <DialogTitle>Edit User</DialogTitle>
+          <DialogDescription>Edit the details of the user.</DialogDescription>
+          <form onSubmit={handleSaveEdit} className="flex flex-col gap-4">
+            <div>
+              <label
+                htmlFor="editName"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="editName"
+                value={currentUser.name}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, name: e.target.value })
+                }
+                className="p-2 block w-full border border-gray-300 rounded-md shadow-sm"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="editEmail"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="editEmail"
+                value={currentUser.email}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, email: e.target.value })
+                }
                 className="p-2 block w-full border border-gray-300 rounded-md shadow-sm"
                 required
               />
