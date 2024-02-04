@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { Button } from "../../components/ui/button";
 import openAIImage from "../../assets/images/logo/openAI.png";
-import Loader from "../../assets/images/loading.svg";
+import TypingSVG from "../../assets/images/typing.svg"; // Import the Typing SVG
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<
+    Array<{ id: number; text: string | JSX.Element; sender: string }>
+  >([
     { id: 1, text: "Hi", sender: "user" },
     { id: 2, text: "Hello! How can I assist you today?", sender: "ai" },
   ]);
@@ -13,6 +15,10 @@ const ChatInterface = () => {
   const [loading, setLoading] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const TypeLoader: React.FC = () => {
+    return <img src={TypingSVG} className="w-6 h-6" alt="Typing..." />;
+  };
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,13 +30,19 @@ const ChatInterface = () => {
     if (input.trim()) {
       setLoading(true);
 
-      const newMessage = {
+      const userMessage = {
         id: messages.length + 1,
         text: input.replace(/(?:\r\n|\r|\n)/g, "<br>"),
         sender: "user",
       };
 
-      setMessages([...messages, newMessage]);
+      const aiTypingMessage = {
+        id: messages.length + 2,
+        text: <TypeLoader />,
+        sender: "ai",
+      };
+
+      setMessages([...messages, userMessage, aiTypingMessage]);
       setInput("");
 
       if (textAreaRef.current) {
@@ -39,6 +51,20 @@ const ChatInterface = () => {
 
       // Simulate an asynchronous action (e.g., API call) with a delay of 2500ms
       await new Promise((resolve) => setTimeout(resolve, 2500));
+
+      // Replace the typing message with the actual AI response
+      const aiResponse = {
+        id: messages.length + 2,
+        text: "Hello! How can I assist you today?", // Replace this with the actual AI response
+        sender: "ai",
+      };
+
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages];
+        updatedMessages.pop(); // Remove the typing message
+        updatedMessages.push(aiResponse); // Add the AI response
+        return updatedMessages;
+      });
 
       setLoading(false);
     }
@@ -66,13 +92,17 @@ const ChatInterface = () => {
     }
   }, [messages]);
 
-  const formatMessageText = (text: string) => {
-    return text.split("<br>").map((line, index) => (
-      <React.Fragment key={index}>
-        {line}
-        {index !== text.split("<br>").length - 1 && <br />}
-      </React.Fragment>
-    ));
+  const formatMessageText = (text: string | JSX.Element) => {
+    if (typeof text === "string") {
+      return text.split("<br>").map((line, index) => (
+        <React.Fragment key={index}>
+          {line}
+          {index !== text.split("<br>").length - 1 && <br />}
+        </React.Fragment>
+      ));
+    } else {
+      return text; // Return JSX element as is
+    }
   };
 
   return (
@@ -103,11 +133,6 @@ const ChatInterface = () => {
                 </div>
               </div>
             </div>
-            {loading && message.id === messages.length && (
-              <div className="flex justify-center py-2">
-                <img src={Loader} className="w-20 h-20" alt="Loading..." />
-              </div>
-            )}
           </div>
         ))}
       </div>
