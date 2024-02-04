@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { Button } from "../../components/ui/button";
 import openAIImage from "../../assets/images/logo/openAI.png";
-import Sending from "../../assets/images/sending.svg";
+import Loader from "../../assets/images/loading.svg";
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([
@@ -10,31 +10,37 @@ const ChatInterface = () => {
     { id: 2, text: "Hello! How can I assist you today?", sender: "ai" },
   ]);
   const [input, setInput] = useState("");
-  const [isSending, setIsSending] = useState(false); // New state variable
+  const [loading, setLoading] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (loading) {
+      return;
+    }
+
     if (input.trim()) {
-      setIsSending(true);
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 2500));
-        const newMessage = {
-          id: messages.length + 1,
-          text: input.replace(/(?:\r\n|\r|\n)/g, "<br>"),
-          sender: "user",
-        };
-        setMessages([...messages, newMessage]);
-        setInput("");
-        if (textAreaRef.current) {
-          textAreaRef.current.style.height = "38px";
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setIsSending(false);
+      setLoading(true);
+
+      const newMessage = {
+        id: messages.length + 1,
+        text: input.replace(/(?:\r\n|\r|\n)/g, "<br>"),
+        sender: "user",
+      };
+
+      setMessages([...messages, newMessage]);
+      setInput("");
+
+      if (textAreaRef.current) {
+        textAreaRef.current.style.height = "38px";
       }
+
+      // Simulate an asynchronous action (e.g., API call) with a delay of 2500ms
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+
+      setLoading(false);
     }
   };
 
@@ -62,18 +68,10 @@ const ChatInterface = () => {
 
   const formatMessageText = (text: string) => {
     return text.split("<br>").map((line, index) => (
-      <div
-        key={index}
-        className={`whitespace-pre-wrap ${
-          index === 0
-            ? "p-2 rounded-t"
-            : index === text.split("<br>").length - 1
-            ? "p-2 rounded-b"
-            : "p-2"
-        }`}
-      >
+      <React.Fragment key={index}>
         {line}
-      </div>
+        {index !== text.split("<br>").length - 1 && <br />}
+      </React.Fragment>
     ));
   };
 
@@ -84,24 +82,32 @@ const ChatInterface = () => {
         className="flex-1 overflow-auto flex flex-col-reverse"
       >
         {[...messages].reverse().map((message) => (
-          <div
-            key={message.id}
-            className={`flex items-end space-x-2 py-4 px-40 ${
-              message.sender === "ai" ? "bg-gray-200" : "bg-gray-100"
-            }`}
-          >
-            <img
-              src={
-                message.sender === "ai"
-                  ? openAIImage
-                  : "https://github.com/shadcn.png"
-              }
-              alt={`${message.sender} Avatar`}
-              className="w-10 h-10 object-cover rounded-full"
-            />
-            <div className="flex flex-col flex-1">
-              {formatMessageText(message.text)}
+          <div key={message.id}>
+            <div
+              className={`flex items-end space-x-2 py-4 px-40 ${
+                message.sender === "ai" ? "bg-gray-200" : "bg-gray-100"
+              }`}
+            >
+              <img
+                src={
+                  message.sender === "ai"
+                    ? openAIImage
+                    : "https://github.com/shadcn.png"
+                }
+                alt={`${message.sender} Avatar`}
+                className="w-10 h-10 object-cover rounded-full"
+              />
+              <div className="flex flex-col flex-1">
+                <div className="p-2 rounded text-black whitespace-pre-wrap">
+                  {formatMessageText(message.text)}
+                </div>
+              </div>
             </div>
+            {loading && message.id === messages.length && (
+              <div className="flex justify-center py-2">
+                <img src={Loader} className="w-20 h-20" alt="Loading..." />
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -113,18 +119,13 @@ const ChatInterface = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             onInput={handleInput}
-            className="flex-1 px-4 py-1.5 border border-gray-300 rounded-lg resize-none overflow-hidden"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg resize-none overflow-hidden"
             placeholder="Send a message"
             rows={1}
             style={{ minHeight: "38px" }}
-            disabled={isSending}
           />
-          <Button type="submit" disabled={isSending}>
-            {isSending ? (
-              <img src={Sending} alt="Sending..." className="h-3.5 w-3.5" />
-            ) : (
-              <AiOutlineSend />
-            )}
+          <Button type="submit" disabled={loading}>
+            <AiOutlineSend />
           </Button>
         </form>
         <p className="text-xs text-center text-slate-500 mt-4">
