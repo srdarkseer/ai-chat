@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Plus, XCircle } from "lucide-react";
 import { FaFilePdf, FaFileWord } from "react-icons/fa";
+import { Button } from "./ui/button";
 
 const FileUpload = () => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -60,19 +61,21 @@ const FileUpload = () => {
 
       {/* Display uploaded files */}
       {uploadedFiles.map((file, index) => (
-        <div key={index} className="col-span-2 relative">
-          <div className="p-2 bg-white rounded-xl w-44 h-40 flex justify-center items-center">
+        <div key={index} className="col-span-2">
+          <div className="p-2 bg-white rounded-xl w-44 h-40 flex justify-center items-center relative">
             <div className="flex flex-col gap-3 items-center p-4 bg-gray-50 rounded-xl w-full">
               {getFileIcon(file.name)}
-              <span className="text-sm text-slate-500 truncate">
+              <span className="text-sm text-slate-500 truncate w-32">
                 {file.name}
               </span>
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => handleRemoveFile(index)}
                 className="absolute top-0 right-0 p-1 text-red-500 hover:text-red-600"
               >
                 <XCircle className="w-6 h-6" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
