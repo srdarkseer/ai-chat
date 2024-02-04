@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Switch } from "../components/ui/switch";
 import { Button } from "./../components/ui/button";
-
 import { FiEdit, FiArrowUpRight } from "react-icons/fi";
 import { MdKeyboardArrowDown, MdEditSquare } from "react-icons/md";
 import { GrHelpBook } from "react-icons/gr";
 import { HiOutlinePaintBrush } from "react-icons/hi2";
-
 import pro from "./../assets/images/pro.png";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,6 +17,9 @@ const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const { logOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleEditAvatar = () => {
     console.log("Edit avatar clicked");
@@ -58,6 +61,14 @@ const Settings = () => {
     setCurrentPassword("");
     setNewPassword("");
     setConfirmNewPassword("");
+  };
+
+  const handleSignOut = () => {
+    // Clear session storage and log out the user
+    sessionStorage.clear();
+    logOut();
+    // Redirect to the login page
+    navigate("/login");
   };
 
   return (
@@ -270,7 +281,7 @@ const Settings = () => {
             </div>
 
             <div className="flex gap-1">
-              <Button size="sm" variant="ghost">
+              <Button size="sm" variant="ghost" onClick={handleSignOut}>
                 Sign Out
               </Button>
 
