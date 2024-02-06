@@ -1,6 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../../../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "../../../components/ui/dropdown-menu";
 import {
   AiOutlineMenu,
   AiOutlineClose,
@@ -9,6 +15,8 @@ import {
   AiOutlineSetting,
 } from "react-icons/ai";
 import { PiUsersLight } from "react-icons/pi";
+import { LuLogOut } from "react-icons/lu";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Sidebar = ({
   isOpen,
@@ -17,6 +25,17 @@ const Sidebar = ({
   isOpen: boolean;
   toggleSidebar: () => void;
 }) => {
+  const { logOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    // Clear session storage and log out the user
+    sessionStorage.clear();
+    logOut();
+    // Redirect to the login page
+    navigate("/login");
+  };
+
   return (
     <div
       className={`fixed inset-y-0 left-0 transform bg-white shadow-md ${
@@ -106,32 +125,43 @@ const Sidebar = ({
         </div>
 
         {/* User Profile Section */}
-        <div
-          className={` w-full flex ${
-            isOpen ? "justify-between" : "justify-center"
-          } items-center p-4`}
-        >
-          <div className="flex items-center space-x-2">
-            <img
-              src="https://github.com/shadcn.png"
-              alt="User Avatar"
-              className={`rounded-full w-10 ${isOpen ? "h-10" : "h-8"}`}
-            />
-            {isOpen && (
-              <span className="text-gray-800 text-sm font-medium">
-                srdarkseer
-              </span>
-            )}
-          </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div
+              className={`w-full flex ${
+                isOpen ? "justify-between" : "justify-center"
+              } items-center px-4 py-2 first-letter: hover:bg-gray-200 transition duration-300 cursor-pointer`}
+            >
+              <div className="flex items-center space-x-2">
+                <img
+                  src="https://github.com/shadcn.png"
+                  alt="User Avatar"
+                  className={`rounded-full w-10 ${isOpen ? "h-10" : "h-8"}`}
+                />
+                {isOpen && (
+                  <span className="text-gray-800 text-sm font-medium">
+                    srdarkseer
+                  </span>
+                )}
+              </div>
+            </div>
+          </DropdownMenuTrigger>
 
-          {isOpen && (
-            <Link to="/ai/settings">
-              <Button variant="ghost" size="icon">
-                <AiOutlineSetting className="w-5 h-5" />
-              </Button>
-            </Link>
-          )}
-        </div>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuItem asChild>
+              <Link to="/ai/settings" className="dropdown-link">
+                <div className="w-full flex items-center gap-4">
+                  <AiOutlineSetting /> Settings
+                </div>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>
+              <div className="w-full flex items-center gap-4">
+                <LuLogOut /> Log out
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
