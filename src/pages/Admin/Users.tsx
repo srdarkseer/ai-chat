@@ -5,7 +5,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { FiEdit } from "react-icons/fi";
 import {
   Table,
   TableBody,
@@ -15,6 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { FiEdit } from "react-icons/fi";
+import { MdDeleteOutline } from "react-icons/md";
 
 const Users = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -45,6 +46,19 @@ const Users = () => {
   const handleSaveEdit = (event) => {
     event.preventDefault();
     setIsEditDialogOpen(false);
+  };
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  // const [userToDelete, setUserToDelete] = useState(null); 
+
+  const handleDelete = () => {
+    // setUserToDelete(user);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Perform the delete operation here
+    setIsDeleteDialogOpen(false);
   };
 
   const tableData = [
@@ -83,6 +97,14 @@ const Users = () => {
                   onClick={() => handleEdit(row)}
                 >
                   <FiEdit className="w-5 h-5" />
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDelete(row)}
+                >
+                  <MdDeleteOutline className="w-5 h-5" />
                 </Button>
               </TableCell>
             </TableRow>
@@ -195,6 +217,33 @@ const Users = () => {
               </Button>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="flex flex-col gap-8">
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogDescription className="text-md">
+            Are you sure you want to delete this user?
+          </DialogDescription>
+          <div className="flex justify-center gap-4">
+            <Button
+              variant="default"
+              size="default"
+              className="w-full"
+              onClick={handleConfirmDelete}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="outline"
+              size="default"
+              className="w-full"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              No
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
