@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { auth } from "../config/firebase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import { authReducer, initialState } from "../reducers/authReducer";
 
 export interface AuthContextProps {
   currentUser: firebase.User | null;
@@ -27,8 +28,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
-  const [isAuthLoading, setIsAuthLoading] = useState(true); // Initialize isAuthLoading
+  const [state, dispatch] = useReducer(authReducer, initialState); // Use authReducer
 
   // Function to log in
   async function logIn(email: string, password: string) {
@@ -42,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (token) {
         sessionStorage.setItem("token", token);
       }
+      dispatch({ type: "LOG_IN", payload: userCredential.user });
       return userCredential;
     } catch (error) {
       // Handle login error
@@ -56,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await auth.signOut();
       // Remove the token from sessionStorage
       sessionStorage.removeItem("token");
+      dispatch({ type: "LOG_OUT" });
     } catch (error) {
       // Handle logout error
       console.error(error);
@@ -65,21 +67,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
-      setIsAuthLoading(false);
+      dispatch({ type: user ? "LOG_IN" : "LOG_OUT", payload: user }); // Dispatch LOG_IN or LOG_OUT action
     });
 
     return unsubscribe;
   }, []);
 
-  const isAuthenticated = currentUser !== null;
+  const isAuthenticated = state.currentUser !== null;
 
   const value: AuthContextProps = {
-    currentUser,
+    ...state,
     logIn,
     logOut,
     isAuthenticated,
-    isAuthLoading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
