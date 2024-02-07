@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Plus, XCircle } from "lucide-react";
 import { FaFilePdf, FaFileWord } from "react-icons/fa";
-import { Button } from "./ui/button";
-import { Progress } from "./ui/progress";
+import { Button } from "../../../../components/ui/button";
+import { Progress } from "../../../../components/ui/progress";
 
 interface UploadedFileWithProgress {
   file: File;

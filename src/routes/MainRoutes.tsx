@@ -1,6 +1,6 @@
 import PrivateRoute from "./PrivateRoutes";
 import ChatInterface from "../pages/User/ChatInterface";
-import Upload from "../pages/Admin/Upload";
+import Upload from "../pages/Admin/Upload/Upload";
 import MainLayout from "../layouts/Main";
 import Setting from "../pages/Settings";
 import Users from "@/pages/Admin/Users";
